@@ -3,7 +3,7 @@ layout: post
 title:  "Frida and Objection"
 date:   2019-06-01 07:10:14 +0000
 categories: Mobile Security
-tags: 
+tags:
     - mobile
     - hacking
     - penetration testing
@@ -11,22 +11,25 @@ thumbnail: mobile
 ---
 
 # Frida
-Frida is a Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers. 
+Frida is a Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers.
 
-The Frida framework allows dymanic introspection of running applications and resources. It also has the ability to inject JavaScript in to a black box process, allowing you to hook functions, apis and trace senstive functions such as cryptograhpic API's. 
+The Frida framework allows dynamic introspection of running applications and resources. It also has the ability to inject JavaScript in to a black box process, allowing you to hook functions, apis and trace sensitive functions such as cryptographic API’s.
 
 Frida uses ```Gadget``` to hook to the required processes. This is in either the form of a ```.so``` file or a ```.dylib``` file, for mobile devices.
 
 
 ## Using Frida.
-To use frida, the device that is being targted must either have the frida-server installed on the device to allow communication to the device or a "Gadget" embedded in the application. There is two different methods for this.
+To use Frida, the device that is being targeted must either have the frida-server installed on the device to allow communication to the device or a “Gadget” embedded in the application. There is two different methods for this.
 
 ### Jailbroken Device - (iOS)
 
 ### Non Jailbroken Device - (iOS)
 
-### Android Emulator - (Android)
-I typically for most testing purposes use a [Genymotion](https://www.genymotion.com/) emulator. These run on a x84 architure so uploading the arm version WILL NOT work. Instend there is a quiet simple process. 
+### Android Emulator/Rooted Device - (Android)
+I typically for most testing purposes use a [Genymotion](https://www.genymotion.com/) emulator. These run on a x86 architecture so uploading the arm version WILL NOT work. Instead there is a quiet simple process. The script provided below will push a Frida server which will act a “Gadget” to a rooted android device.
+
+There is a slight mod to the script which allows it to upload and detect the architecture that the emulator is running and upload the file directory to the device using ```android debug bridge``` or ```adb``` for short.
+
 {% highlight python %}
 #!/usr/bin/env python3
 
@@ -207,14 +210,14 @@ if __name__ == "__main__":
 
 {% endhighlight %}
 
-There is a slight mod to the script which allows it to upload and detect the architure that the emulator is running and upload the file directory to the device using android debug bridge or ```adb``` for short.
+There is a slight mod to the script which allows it to upload and detect the architecture that the emulator is running and upload the file directory to the device using android debug bridge or ```adb``` for short.
 
 
 ##Non Rooted - (Android)
 
 ### Tips:
 Set alias to route
-{% highlight bash %}alias frida_open=frida-trace -U -p [PID] "Open*"{% endhighlight %} This allias will trace the open calls that frida uses.
+{% highlight bash %} alias frida_open=frida-trace -U -p [PID] "Open*"{% endhighlight %} This alias will trace the open calls that frida uses.
 
 {% highlight bash %}alias frida_recv=frida-trace -U -p [PID] "*recv"{% endhighlight %} This will track the recv function calls
 
@@ -223,28 +226,28 @@ Set alias to route
 
 # Objection
 
-Objection is a dynamic instruementation framework which heavily uses the frida framework.
+Objection is a dynamic instrumentation framework which heavily uses the Frida framework.
 Developed and maintained by [leonza](www.github.com/leonza/sensepost)
 
 Can be downloaded here [objection](github.com/sensepost/objection)
 
 ## Installing Objection
-Installing objection is extremely simple as ```pip3 install objection```. This will install objection and frida.
+Installing objection is extremely simple as ```pip3 install objection```. This will install objection and Frida.
 
 
 
 
 ## Method Hooking Objection.
 
-There are a number of functions and features objection has one such is the way Objection is able to dynmaically hook methods and backtrace allowing in runtime. This can allow a researcher to bypass jailbreak and root protections, aswell as a many of functions
-```ios class list``` will list all the avaiable classes.
+There are a number of functions and features objection has one such is the way Objection is able to dynamically hook methods and back trace allowing in runtime. This can allow a researcher to bypass jailbreak and root protections, as well as a many of functions
+```ios class list``` will list all the available classes.
 [Picture of classes from DVIA]
-Using the identifed classes we can look at the class methods and use objection to hook those and tamper with them
-```ios class_method <class>``` this command will then list the class methods assoicated to the previously identifed classes. 
-[Pciture]
-Now we have this class method that seems quite intersting 
+Using the identified classes we can look at the class methods and use objection to hook those and tamper with them
+```ios class_method <class>``` this command will then list the class methods associated to the previously identified classes.
+[Picture]
+Now we have this class method that seems quite interesting
 ```-[DVWI IsJailBroken:]```
-Now using the device we can see once wwe xx it returns 0x0 causing the applicaton to termiate, however we can overwrite this return value in two different ways, Objection at the moment only supports  could only set to
+Now using the device we can see once we xx it returns 0x0 causing the application to terminate, however we can overwrite this return value in two different ways, Objection at the moment only supports  could only set to
 {% highlight bash %}
 True = ```0x1``` or False = ```0x0```
 {% endhighlight %}
@@ -256,7 +259,7 @@ True = ```0x1``` or False = ```0x0```
 
 
 # Plugin Code
-Writing plugin code for objection is extremely simple the code below, will enumerate the files listed in the directories and download them to the local enviorment.
+Writing plugin code for objection is extremely simple the code below, will enumerate the files listed in the directories and download them to the local environment.
 {% highlight python %}
 import os
 import glob
@@ -383,4 +386,5 @@ if (Objective.C exists)
 
 
 Using the scripts above and the use of HOPPER/IDA you can gather a quite a decent reverse enginning picture of the application, functions methods and use those to trace implementation features as such th following demostrates the use of Objection to Trace Certificate pinning issue and set the return value {% highlight javascript %}0x1{% endhighlight %} or {% highlight javascript %}0x0{% endhighlight %}
+
 
