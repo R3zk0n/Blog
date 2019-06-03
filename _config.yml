@@ -1,0 +1,37 @@
+# Site settings
+title: "R3zk0n"
+email: rezkon@protonmail.com
+description: "Security Researcher, Casual CTF Player, Located Melbourne Australia"
+baseurl: ""
+url: "https://x64.sh"
+title_description: "Blog for a security researcher located in melbourne, australia with a specialistion in mobile security and exploitation, Casual CTF Player"
+title_image: "https://www.gravatar.com/avatar/00000000000000000000000000000000?s=500&d=mm"
+google_analytics: ""
+disqus_account: 
+github_repository: https://github.com/R3zk0n
+addthis_id:
+post_limit: 5
+
+# Social usernames/URLs
+twitter_username: Rezk0n
+github_username:  R3zk0n
+instagram_username: 
+reddit_username: 
+linkedin_link: 
+google_plus_link:
+stackoverflow_link:
+xing_link:
+facebook_link:
+
+# Footer
+footer_left: 
+footer_right:
+# Build settings
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+permalink: pretty
+exclude: [vendor]
