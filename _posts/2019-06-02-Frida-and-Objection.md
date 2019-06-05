@@ -240,17 +240,27 @@ Installing objection is extremely simple as ```pip3 install objection```. This w
 ## Method Hooking Objection.
 
 There are a number of functions and features objection has one such is the way Objection is able to dynamically hook methods and back trace allowing in runtime. This can allow a researcher to bypass jailbreak and root protections, as well as a many of functions
-```ios class list``` will list all the available classes.
-[Picture of classes from DVIA]
+```ios hooking class list``` will list all the available classes with the assoicated application.
+
+![Classes](https://i.imgur.com/aTCL6gL.png)
 Using the identified classes we can look at the class methods and use objection to hook those and tamper with them
-```ios class_method <class>``` this command will then list the class methods associated to the previously identified classes.
-[Picture]
-Now we have this class method that seems quite interesting
-```-[DVWI IsJailBroken:]```
-Now using the device we can see once we xx it returns 0x0 causing the application to terminate, however we can overwrite this return value in two different ways, Objection at the moment only supports  could only set to
-{% highlight bash %}
-True = ```0x1``` or False = ```0x0```
-{% endhighlight %}
+
+Locating the Jailbroken class by saving output and using grep to find the JailbrokenVC 
+![JailBroken](https://imgur.com/K13gdG7.png)
+
+
+```ios hooking class_method <class>``` this command will then list the class methods associated to the previously identified classes.
+![Class Method](https://i.imgur.com/8ujBmg1.png)
+
+Now we have the knowledge the class method to use for hooking purposes would end up being 
+```+[JailBreakDetection isJailBroken]```. This is made up of the + being assoicated with the class method and the class is called first followed by the method.
+
+Now we can use this too hook the class to watch and modify its value using the command
+```ios hooking watch method "+[JailBreakDetection isJailBroken]" --dump-args --dump-return --dump-backtrace```
+![Watch class](https://i.imgur.com/rHddZtJ.png)
+
+Now we can see the return value being set to ```0x1``` which is causes the application to display the device is "Jailbroken" however, we can set the value to ```0x0```. This will change the return value to the application, causing it to bypass the jailbroken detection and display "This is not jailbroken"
+![Bypass](https://i.imgur.com/X3sjtAp.png)
 
 
 
@@ -383,8 +393,4 @@ if (Objective.C exists)
 }
 ```
 {% endhighlight %}
-
-
-Using the scripts above and the use of HOPPER/IDA you can gather a quite a decent reverse enginning picture of the application, functions methods and use those to trace implementation features as such th following demostrates the use of Objection to Trace Certificate pinning issue and set the return value {% highlight javascript %}0x1{% endhighlight %} or {% highlight javascript %}0x0{% endhighlight %}
-
 
